@@ -73,27 +73,26 @@ class Program2(object):
 
         posteriorprobability = numpy.ones(2)
         for idx in range(2):
-            for idx in range(2):
-                probability = 0
+            probability = 0
 
-                if idx == 0:
-                    probability += numpy.log(good)
-                elif idx == 1:
-                    probability += numpy.log(bad)
+            if idx == 0:
+                probability += numpy.log(good)
+            elif idx == 1:
+                probability += numpy.log(bad)
 
-                for idx2 in range(len(x)):
-                    a = ((x[idx2] - themean[idx][idx2]) ** 2)
-                    b = (2 * ((standard[idx][idx2]) ** 2))
+            for idx2 in range(len(x)):
+                a = ((x[idx2] - themean[idx][idx2]) ** 2)
+                b = (2 * ((standard[idx][idx2]) ** 2))
 
-                    exp = numpy.exp(-1 * (a/b))
-                    n = 1 / (numpy.sqrt(2 * numpy.pi) * standard[idx][idx2])
+                exp = numpy.exp(-1 * (a/b))
+                n = 1 / (numpy.sqrt(2 * numpy.pi) * standard[idx][idx2])
 
-                    probability2 = (n * exp)
+                probability2 = (n * exp)
                 
-                    if probability2 == 0:
-                        probability2 = (10 ** -320)
+                if probability2 == 0:
+                    probability2 = (10 ** -320)
 
-                    probability += numpy.log(probability2)
+                probability += numpy.log(probability2)
 
             posteriorprobability[idx] = probability
 
