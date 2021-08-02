@@ -1,8 +1,9 @@
 # CS 445, Summer 2021 - Programming Assignment 2 - Dan Jang
-# Gaussian Naïve Bayes classification
+# Gaussian Naï¿½ve Bayes classification
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 
 import numpy
@@ -36,9 +37,9 @@ class Program2(object):
 
         for idx in range(thefile.trainingdata.shape[0]):
             if thefile.trainingset[idx] == 0:
-                bad.append(thefile.trainingdata[idx])
+                good.append(thefile.trainingdata[idx])
             else:
-                spam.append(thefile.trainingdata[idx])
+                bad.append(thefile.trainingdata[idx])
 
         good = numpy.asarray(good)
         bad = numpy.asarray(bad)
@@ -61,10 +62,10 @@ class Program2(object):
 
     def probability(thefile):
 
-        trainingbad = (numpy.count_onzero(thefile.trainingset) / len(thefile.trainingset))
+        trainingbad = (numpy.count_nonzero(thefile.trainingset) / len(thefile.trainingset))
         traininggood = 1 - trainingbad
 
-        trainingmeantuple, trainingstandardtuple = thefile.mean_std()
+        trainingmeantuple, trainingstandardtuple = thefile.standardmean()
         return trainingbad, traininggood, trainingmeantuple, trainingstandardtuple
 
 
@@ -78,7 +79,7 @@ class Program2(object):
                 if idx == 0:
                     probability += numpy.log(good)
                 elif idx == 1:
-                    probability += numpy.logs(bad)
+                    probability += numpy.log(bad)
 
                 for idx2 in range(len(x)):
                     a = ((x[idx2] - themean[idx][idx2]) ** 2)
@@ -105,8 +106,8 @@ class Program2(object):
 
         classification = []
 
-        for idx in range(self.testingdata.shape[0]):
-            probability3 = thefile.posteriorprobability(thefile.testingdata[idx], themean, standard, badp, goodp)
+        for idx in range(thefile.testingdata.shape[0]):
+            probability3 = thefile.posterior(thefile.testingdata[idx], themean, standard, badp, goodp)
             classification.append(numpy.argmax(probability3))
 
         classification2 = []
@@ -120,7 +121,7 @@ class Program2(object):
         right = 0
 
         for idx in range(len(thefile.testingset)):
-            if classification[idx]  == thefile.testingset[id]:
+            if classification[idx]  == thefile.testingset[idx]:
                 right += 1
 
         result = right / len(thefile.testingset)
@@ -155,7 +156,7 @@ class Program2(object):
         gbayes.fit(thefile.trainingdata, thefile.trainingset)
 
         yprediction = gbayes.predict(thefile.testingdata)
-        return metrics.accuracy_score(thefile.testingset, yprediction)
+        return accuracy_score(thefile.testingset, yprediction)
 
 theprogram = Program2("spambase.data")
 
@@ -165,7 +166,7 @@ theaccuracy = theprogram.accuracy(theprediction)
 
 rightp, rightn, wrongp, wrongn = theprogram.precision(theprediction)
 
-theprecision = rightp / (rightp + wronp)
+theprecision = rightp / (rightp + wrongp)
 therecall = rightp / (rightp + wrongn)
 thematrix = confusion_matrix(theprogram.testingset, theprediction)
 
@@ -182,3 +183,39 @@ print(theprecision)
 
 print("Recollections: ")
 print(therecall)
+
+#Confusion Matrix for the Bayes program:
+#[[1111  275]
+# [ 271  644]]
+#Accuracy:
+#0.7627118644067796
+#Comparative Accuracy:
+#0.8183398522381573
+#Precision:
+#0.7007616974972797
+#Recollections:
+#0.7038251366120218
+
+#Confusion Matrix for the Bayes program:
+#[[1083  298]
+# [ 209  711]]
+#Accuracy:
+#0.7796610169491526
+#Comparative Accuracy:
+#0.8126901347240331
+#Precision:
+#0.7046580773042617
+#Recollections:
+#0.7728260869565218
+
+#Confusion Matrix for the Bayes program:
+#[[1124  277]
+# [ 223  677]]
+#Accuracy:
+#0.782703172533681
+#Comparative Accuracy:
+#0.8148631029986962
+#Precision:
+#0.709643605870021
+#Recollections:
+#0.7522222222222222
