@@ -14,9 +14,60 @@ class Program2(object):
 
 
     def __init__(thefile, name):
-        thefile.trainingdata, thefile.testingdata, thefile.trainingset, thefile.testingset = thefile.splitfile(name)
+        
+        print("The program will run itself four separate times with each run having a 'new' dataset split!")
+        print("")
+        print("")
+        percenter = float(100)
+        for idxx in "four": # cycles 4 times
+            thefile.trainingdata, thefile.testingdata, thefile.trainingset, thefile.testingset = thefile.splitfile(name)
 
+            theprediction = thefile.classification()
 
+            theaccuracy = thefile.accuracy(theprediction)
+
+            rightp, rightn, wrongp, wrongn = thefile.precision(theprediction)
+
+            theprecision = rightp / (rightp + wrongp)
+            therecall = rightp / (rightp + wrongn)
+            thematrix = confusion_matrix(thefile.testingset, theprediction)
+
+            if idxx == "f":
+                print("1st Run - Confusion Matrix for the Bayes program: ")
+            elif idxx == "o":
+                print("2nd Run - Confusion Matrix for the Bayes program: ")
+            elif idxx == "u":
+                print("3rd Run - Confusion Matrix for the Bayes program: ")
+            elif idxx == "r":
+                print("4th Run - Confusion Matrix for the Bayes program: ")
+
+            print(thematrix)
+
+            print("Accuracy: ")
+            print(theaccuracy)
+            print("[" + (str((theaccuracy) * percenter)) + "%]")
+            print("")
+
+            print("Comparative Accuracy: ")
+            print(thefile.gaussian())
+            print("[" + (str((thefile.gaussian()) * percenter)) + "%]")
+            print("")
+
+            print("Precision: ")
+            print(theprecision)
+            print("[" + (str((theprecision) * percenter)) + "%]")
+            print("")
+
+            print("Recollections: ")
+            print(therecall)
+            print("[" + (str((therecall) * percenter)) + "%]")
+            print("")
+            print("")
+            
+            print("---")
+
+            print("")
+            print("")
     def splitfile(thefile, name):
         cache = numpy.loadtxt(name, delimiter=",")
         x = cache[:, :-1]
@@ -159,30 +210,6 @@ class Program2(object):
 
 theprogram = Program2("spambase.data")
 
-theprediction = theprogram.classification()
-
-theaccuracy = theprogram.accuracy(theprediction)
-
-rightp, rightn, wrongp, wrongn = theprogram.precision(theprediction)
-
-theprecision = rightp / (rightp + wrongp)
-therecall = rightp / (rightp + wrongn)
-thematrix = confusion_matrix(theprogram.testingset, theprediction)
-
-print("Confusion Matrix for the Bayes program: ")
-print(thematrix)
-
-print("Accuracy: ")
-print(theaccuracy)
-print("Comparative Accuracy: ")
-print(theprogram.gaussian())
-
-print("Precision: ")
-print(theprecision)
-
-print("Recollections: ")
-print(therecall)
-
 #Confusion Matrix for the Bayes program:
 #[[1111  275]
 # [ 271  644]]
@@ -218,3 +245,16 @@ print(therecall)
 #0.709643605870021
 #Recollections:
 #0.7522222222222222
+
+# after fix (there was a double  for loop)
+#Confusion Matrix for the Bayes program:
+#[[1022  377]
+# [  39  863]]
+#Accuracy:
+#0.8192090395480226
+#Comparative Accuracy:
+#0.8218166014776185
+#Precision:
+#0.6959677419354838
+#Recollections:
+#0.9567627494456763
