@@ -1,5 +1,5 @@
 # CS 445, Summer 2021 - Programming Assignment 2 - Dan Jang
-# Gaussian Na�ve Bayes classification
+# Gaussian Naive Bayes classification
 
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
@@ -22,7 +22,7 @@ class Program2(object):
         for idxx in "four": # cycles 4 times
             thefile.trainingdata, thefile.testingdata, thefile.trainingset, thefile.testingset = thefile.splitfile(name)
 
-            theprediction = thefile.classification()
+            theprediction = thefile.classification()    
 
             theaccuracy = thefile.accuracy(theprediction)
 
@@ -68,6 +68,9 @@ class Program2(object):
 
             print("")
             print("")
+
+    # This function would help split the Spambase database to create a testing set and a training set;
+    # would supposedly contain around 40% spam and 60% non-spam to represent actual composition of the Spambase dataset per split file, each split having around 2300 instances
     def splitfile(thefile, name):
         cache = numpy.loadtxt(name, delimiter=",")
         x = cache[:, :-1]
@@ -76,7 +79,7 @@ class Program2(object):
     
         return trainingx, testingx, trainingy, testingy
 
-
+    # Helps to calculate standard deviation and mean values for each of the non-spam (good) and spam (bad) data
     def standardmean(thefile):
         shape = thefile.trainingdata.shape[1]
 
@@ -95,6 +98,7 @@ class Program2(object):
         good = numpy.asarray(good)
         bad = numpy.asarray(bad)
 
+        # Calculates the mean value and standard deviation values  for specific types of our two types of arrays
         for idx in range(0,shape):
               themean[0,idx] = numpy.nanmean(good.T[idx])
               themean[1,idx] = numpy.nanmean(bad.T[idx])
@@ -110,7 +114,7 @@ class Program2(object):
 
         return themean,standard
 
-
+    #  Generates our probability based prediction model
     def probability(thefile):
 
         trainingbad = (numpy.count_nonzero(thefile.trainingset) / len(thefile.trainingset))
@@ -149,7 +153,7 @@ class Program2(object):
 
         return posteriorprobability
 
-
+    # Uses the algorithmic Naive Bayes model as to classify
     def classification(thefile):
 
         badp, goodp, themean, standard = thefile.probability()
@@ -198,7 +202,8 @@ class Program2(object):
 
         return rightprecision, rightnum, wrongprecision, wrongnum
 
-
+    # Benchmark comparison purposes, a Gaussian Naive Bayes implementation from sklearn.naive_bayes, 
+    # that is ran with the same data set as the 'homebrew' implementation of GNB for our Program 2
     def gaussian(thefile):
 
         gbayes = GaussianNB()
@@ -258,3 +263,4 @@ theprogram = Program2("spambase.data")
 #0.6959677419354838
 #Recollections:
 #0.9567627494456763
+
